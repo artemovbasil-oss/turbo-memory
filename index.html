@@ -301,6 +301,22 @@
         filter: blur(4px);
       }
 
+      .stage-image {
+        margin-top: 8px;
+        width: 100%;
+        aspect-ratio: 303 / 207;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .stage-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+
       .chips {
         margin-top: 12px;
         display: flex;
@@ -343,6 +359,14 @@
         font-size: 12px;
         font-weight: 600;
         line-height: 1.15;
+      }
+
+      .lock-overlay.large {
+        top: 143px;
+      }
+
+      .lock-overlay.large span:last-child {
+        color: #c0cccf;
       }
 
       .lock-icon {
@@ -474,6 +498,9 @@
           <div class="locked-content">
             <h2 class="card-title">Second Stage</h2>
             <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation of the cartoon.</p>
+            <div class="stage-image">
+              <img src="https://www.figma.com/api/mcp/asset/44f2541c-07a5-4bba-94ab-c9cae412c0c4" alt="" />
+            </div>
             <div class="chips">
               <span class="chip c1">Emotions</span>
               <span class="chip c2">Light</span>
@@ -481,8 +508,8 @@
               <span class="chip c4">Shadows</span>
             </div>
           </div>
-          <div class="lock-overlay">
-            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+          <div class="lock-overlay large">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/bc4c6c6b-f40c-4ba9-bd04-23bae6a785a3" alt="" /></span>
             <span>locked</span>
           </div>
         </article>
@@ -572,10 +599,7 @@
         playBtn.classList.remove("is-hidden");
         isPlaying = false;
         voiceAudio.pause();
-        voiceAudio.currentTime = 0;
         video.pause();
-        video.loop = false;
-        video.currentTime = 0;
       };
 
       const startPlayback = async () => {
@@ -586,9 +610,8 @@
         hero.classList.add("video-active");
 
         try {
-          voiceAudio.currentTime = 0;
-          video.currentTime = 0;
           video.loop = true;
+          voiceAudio.loop = true;
           await Promise.all([video.play(), voiceAudio.play()]);
         } catch (error) {
           resetToImage();
@@ -597,13 +620,24 @@
 
       playBtn.addEventListener("click", startPlayback);
 
-      voiceAudio.addEventListener("ended", () => {
-        resetToImage();
+      document.addEventListener("visibilitychange", () => {
+        if (!isPlaying) return;
+
+        if (document.hidden) {
+          video.pause();
+          voiceAudio.pause();
+          return;
+        }
+
+        Promise.all([video.play(), voiceAudio.play()]).catch(() => {
+          resetToImage();
+        });
       });
 
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden && isPlaying) {
-          resetToImage();
+      window.addEventListener("pagehide", () => {
+        if (isPlaying) {
+          video.pause();
+          voiceAudio.pause();
         }
       });
 
