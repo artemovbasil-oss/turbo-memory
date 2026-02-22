@@ -75,7 +75,7 @@
 
       .app {
         width: 100%;
-        max-width: 430px;
+        max-width: 401px;
         margin: 0 auto;
         background: var(--page-bg);
         position: relative;
@@ -94,6 +94,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center top;
       }
 
       .hero-video {
@@ -192,7 +193,7 @@
 
       .section {
         position: relative;
-        margin: -6px 0 0;
+        margin: -96px 0 0;
         padding: 0 16px max(26px, env(safe-area-inset-bottom));
       }
 
@@ -203,10 +204,14 @@
         z-index: 0;
       }
 
-      .road svg {
+      .road img {
+        position: absolute;
+        top: 248px;
+        left: 50%;
+        width: 190.5px;
+        height: auto;
+        transform: translateX(-4px);
         display: block;
-        width: 100%;
-        height: 100%;
       }
 
       .card {
@@ -390,7 +395,7 @@
 
         <div class="hero-content">
           <div class="logo">
-            <img src="https://www.figma.com/api/mcp/asset/ca5a33f0-4c5a-4da8-a1f5-b8b4f0ad8cf8" alt="Kiwi cartoon lab" />
+            <img src="https://basilarcana-assets.b-cdn.net/qiwi/logo.svg" alt="Kiwi cartoon lab" />
           </div>
 
           <div class="play-wrap">
@@ -412,10 +417,7 @@
 
       <section class="section">
         <div class="road" aria-hidden="true">
-          <svg viewBox="0 0 430 980" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M225 0 C 228 130, 105 190, 150 315 C 190 428, 320 420, 280 540 C 250 628, 140 648, 170 760 C 200 860, 290 850, 282 980" stroke="rgba(255,255,255,0.72)" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <path d="M223 0 C 226 130, 103 190, 148 315 C 188 428, 318 420, 278 540 C 248 628, 138 648, 168 760 C 198 860, 288 850, 280 980" stroke="rgba(141,171,176,0.6)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          </svg>
+          <img src="https://www.figma.com/api/mcp/asset/e134eac1-85be-43ad-919a-45a351d76ea0" alt="" />
         </div>
 
         <article class="card card-intro reveal">
@@ -508,7 +510,7 @@
         </article>
 
         <div class="footer-mark reveal">
-          <img src="https://www.figma.com/api/mcp/asset/2f316df5-ab27-42d4-9988-453d118e24c5" alt="Kiwi cartoon lab footer mark" />
+          <img src="https://basilarcana-assets.b-cdn.net/qiwi/logo-bottom.svg" alt="Kiwi cartoon lab footer mark" />
         </div>
       </section>
     </main>
