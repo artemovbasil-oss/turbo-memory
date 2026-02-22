@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Qiwi Cartoon Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --panel-bg: rgba(255, 255, 255, 0.84);
+        --badge-bg: rgba(255, 255, 255, 0.8);
+        --play-bg: rgba(125, 163, 172, 0.8);
+        --snackbar-bg: rgba(52, 59, 64, 0.92);
+        --snackbar-fg: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        font-family: "Manrope", sans-serif;
+      }
+
+      body {
+        background: #111;
+      }
+
+      .desktop-guard {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(145deg, #101113, #1d2528);
+        color: #eef4f6;
+        padding: 24px;
+        z-index: 20;
+      }
+
+      .desktop-guard__box {
+        max-width: 440px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 16px;
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(4px);
+      }
+
+      .desktop-guard h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .desktop-guard p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.45;
+        opacity: 0.92;
+      }
+
+      .mobile-app {
+        position: relative;
+        width: 100%;
+        height: 100dvh;
+        max-width: 430px;
+        margin: 0 auto;
+        overflow: hidden;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+      }
+
+      .bg-image,
+      .bg-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+      }
+
+      .bg-video {
+        opacity: 0;
+        transition: opacity 260ms ease;
+      }
+
+      .mobile-app.video-active .bg-video {
+        opacity: 1;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.02) 36%,
+          rgba(0, 0, 0, 0.13) 66%,
+          rgba(0, 0, 0, 0.18) 100%
+        );
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        padding: max(14px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)) 16px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logo {
+        width: 132px;
+        margin: 34px auto 0;
+      }
+
+      .logo img {
+        width: 100%;
+        display: block;
+      }
+
+      .play-wrap {
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+      }
+
+      .play-btn {
+        border: 0;
+        border-radius: 56px;
+        background: var(--play-bg);
+        color: #fff;
+        min-height: 54px;
+        padding: 10px 20px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        backdrop-filter: blur(2px);
+        animation: bounce 2.2s ease-in-out infinite;
+      }
+
+      .play-btn:active {
+        transform: scale(0.98);
+      }
+
+      .play-label {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .play-icon {
+        width: 0;
+        height: 0;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 18px solid #ffffff;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        35% {
+          transform: translateY(-4px);
+        }
+        60% {
+          transform: translateY(0);
+        }
+        78% {
+          transform: translateY(-2px);
+        }
+      }
+
+      .credits {
+        margin-top: 14px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 9px;
+        line-height: 1.35;
+        letter-spacing: 0.2px;
+      }
+
+      .stage-card {
+        margin-top: 14px;
+        background: var(--panel-bg);
+        backdrop-filter: blur(3px);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .stage-title {
+        margin: 0;
+        color: #6c6e70;
+        font-size: 16px;
+        line-height: 1.2;
+        font-weight: 600;
+      }
+
+      .stage-desc {
+        margin: 4px 0 12px;
+        color: #8898a5;
+        font-size: 12px;
+        line-height: 1.25;
+        font-weight: 600;
+      }
+
+      .chips {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 14px;
+        min-height: 23px;
+        line-height: 1;
+        padding: 6px 8px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .chip-1 {
+        background: #d7c6a4;
+      }
+      .chip-2 {
+        background: #dee0df;
+      }
+      .chip-3 {
+        background: #b9beb0;
+      }
+      .chip-4 {
+        background: #755439;
+      }
+
+      .locked-row {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .locked-btn {
+        border: 0;
+        border-radius: 6px;
+        background: var(--badge-bg);
+        color: #7da3ac;
+        min-height: 30px;
+        padding: 6px 7px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .lock-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-flex;
+      }
+
+      .lock-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .snackbar {
+        position: absolute;
+        left: 50%;
+        bottom: calc(max(24px, env(safe-area-inset-bottom)) + 6px);
+        transform: translate(-50%, 14px);
+        opacity: 0;
+        background: var(--snackbar-bg);
+        color: var(--snackbar-fg);
+        font-size: 14px;
+        font-weight: 600;
+        padding: 12px 14px;
+        border-radius: 10px;
+        z-index: 4;
+        transition: opacity 180ms ease, transform 180ms ease;
+        pointer-events: none;
+      }
+
+      .snackbar.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      @media (max-width: 420px) {
+        .play-btn {
+          min-height: 50px;
+          padding: 10px 18px;
+          gap: 10px;
+        }
+        .play-label {
+          font-size: 18px;
+        }
+        .play-icon {
+          border-top-width: 10px;
+          border-bottom-width: 10px;
+          border-left-width: 16px;
+        }
+      }
+
+      @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+        .desktop-guard {
+          display: flex;
+        }
+        .mobile-app {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="desktop-guard" aria-hidden="true">
+      <div class="desktop-guard__box">
+        <h1>Откройте страницу на телефоне</h1>
+        <p>Этот экран доступен только в мобильном формате.</p>
+      </div>
+    </section>
+
+    <main class="mobile-app" id="mobileApp">
+      <img class="bg-image" src="https://basilarcana-assets.b-cdn.net/qiwi/back.png" alt="Фон" />
+      <video
+        class="bg-video"
+        id="bgVideo"
+        src="https://basilarcana-assets.b-cdn.net/qiwi/video.mp4"
+        playsinline
+        muted
+        preload="auto"
+      ></video>
+      <div class="overlay"></div>
+
+      <section class="content">
+        <div class="logo">
+          <img src="https://basilarcana-assets.b-cdn.net/qiwi/logo.svg" alt="Qiwi cartoon lab" />
+        </div>
+
+        <div class="play-wrap">
+          <button class="play-btn" id="playBtn" aria-label="Play video">
+            <span class="play-label">Play</span>
+            <span class="play-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="credits">BRUNO PIATTI . UME CHRONYN | JESSICA TANDY<br />
+          BEN KINGSLEY . KATHY BATES . BOB HOSKINS and BRENT MADDOCK . S.S. WILSON<br />
+          JAMES HORNER . STORY by BRENT MADDOCK . S.S. WILSON . MICK GARRIS<br />
+          RONALD L. SCHWARY . MATT WILLIAMS
+        </div>
+
+        <article class="stage-card">
+          <h2 class="stage-title">Первый этап</h2>
+          <p class="stage-desc">Сфотографируй 10 примеров которые станут эстетическим фундаментом мультфильма</p>
+          <div class="chips">
+            <span class="chip chip-1">Эмоций</span>
+            <span class="chip chip-2">Света</span>
+            <span class="chip chip-3">Образов</span>
+            <span class="chip chip-4">Тени</span>
+          </div>
+        </article>
+
+        <div class="locked-row">
+          <button class="locked-btn" data-stage="2">
+            <span class="lock-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
+                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
+              </svg>
+            </span>
+            2 этап
+          </button>
+          <button class="locked-btn" data-stage="3">
+            <span class="lock-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
+                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
+              </svg>
+            </span>
+            3 этап
+          </button>
+          <button class="locked-btn" data-stage="4">
+            <span class="lock-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
+                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
+              </svg>
+            </span>
+            4 этап
+          </button>
+          <button class="locked-btn" data-stage="5">
+            <span class="lock-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
+                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
+              </svg>
+            </span>
+            5 этап
+          </button>
+        </div>
+      </section>
+
+      <div class="snackbar" id="snackbar">этап пока заблокирован</div>
+    </main>
+
+    <script>
+      const mobileApp = document.getElementById("mobileApp");
+      const video = document.getElementById("bgVideo");
+      const playBtn = document.getElementById("playBtn");
+      const snackbar = document.getElementById("snackbar");
+      const lockedButtons = document.querySelectorAll(".locked-btn");
+
+      let isPlaying = false;
+      let loopsDone = 0;
+      let snackbarTimer;
+
+      const resetToImage = () => {
+        mobileApp.classList.remove("video-active");
+        isPlaying = false;
+        loopsDone = 0;
+        video.pause();
+        video.currentTime = 0;
+      };
+
+      const playVideoThreeTimes = async () => {
+        if (isPlaying) return;
+        isPlaying = true;
+        loopsDone = 0;
+        mobileApp.classList.add("video-active");
+
+        try {
+          video.currentTime = 0;
+          await video.play();
+        } catch {
+          resetToImage();
+        }
+      };
+
+      video.addEventListener("ended", async () => {
+        loopsDone += 1;
+        if (loopsDone < 3) {
+          video.currentTime = 0;
+          try {
+            await video.play();
+          } catch {
+            resetToImage();
+          }
+          return;
+        }
+        resetToImage();
+      });
+
+      playBtn.addEventListener("click", playVideoThreeTimes);
+
+      const showLockedSnackbar = () => {
+        snackbar.classList.add("show");
+        clearTimeout(snackbarTimer);
+        snackbarTimer = setTimeout(() => {
+          snackbar.classList.remove("show");
+        }, 1700);
+      };
+
+      lockedButtons.forEach((button) => {
+        button.addEventListener("click", showLockedSnackbar);
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && isPlaying) {
+          resetToImage();
+        }
+      });
+    </script>
+  </body>
+</html>
