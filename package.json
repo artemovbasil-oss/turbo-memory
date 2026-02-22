@@ -1,0 +1,12 @@
+{
+  "name": "turbo-memory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-first static landing page",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
