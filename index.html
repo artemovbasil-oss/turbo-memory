@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Qiwi Cartoon Lab</title>
+    <title>Kiwi Cartoon Lab</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
+        --page-bg: #b1ced1;
         --panel-bg: rgba(255, 255, 255, 0.84);
-        --badge-bg: rgba(255, 255, 255, 0.8);
-        --play-bg: rgba(125, 163, 172, 0.8);
-        --snackbar-bg: rgba(52, 59, 64, 0.92);
-        --snackbar-fg: #ffffff;
+        --panel-bg-muted: rgba(255, 255, 255, 0.74);
+        --panel-bg-faint: rgba(255, 255, 255, 0.25);
+        --play-bg: rgba(79, 145, 161, 0.8);
+        --shadow: 0 4px 30px rgba(255, 255, 255, 0.65);
       }
 
       * {
@@ -25,15 +26,16 @@
 
       html,
       body {
-        width: 100%;
-        height: 100%;
         margin: 0;
-        overflow: hidden;
+        width: 100%;
+        min-height: 100%;
         font-family: "Manrope", sans-serif;
+        background: var(--page-bg);
+        color: #334046;
       }
 
       body {
-        background: #111;
+        overflow-x: hidden;
       }
 
       .desktop-guard {
@@ -46,7 +48,7 @@
         background: linear-gradient(145deg, #101113, #1d2528);
         color: #eef4f6;
         padding: 24px;
-        z-index: 20;
+        z-index: 50;
       }
 
       .desktop-guard__box {
@@ -62,7 +64,6 @@
         margin: 0 0 10px;
         font-size: 24px;
         line-height: 1.2;
-        font-weight: 700;
       }
 
       .desktop-guard p {
@@ -72,72 +73,70 @@
         opacity: 0.92;
       }
 
-      .mobile-app {
-        position: relative;
+      .app {
         width: 100%;
-        height: 100dvh;
         max-width: 430px;
         margin: 0 auto;
-        overflow: hidden;
-        display: flex;
-        align-items: stretch;
-        justify-content: center;
+        background: var(--page-bg);
+        position: relative;
       }
 
-      .bg-image,
-      .bg-video {
+      .hero {
+        min-height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-bg,
+      .hero-video {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        pointer-events: none;
       }
 
-      .bg-video {
+      .hero-video {
         opacity: 0;
         transition: opacity 260ms ease;
       }
 
-      .mobile-app.video-active .bg-video {
+      .hero.video-active .hero-video {
         opacity: 1;
       }
 
-      .overlay {
+      .hero::after {
+        content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.02) 36%,
-          rgba(0, 0, 0, 0.13) 66%,
-          rgba(0, 0, 0, 0.18) 100%
-        );
+        background: linear-gradient(to bottom, rgba(177, 206, 209, 0) 63%, #b1ced1 100%);
+        pointer-events: none;
       }
 
-      .content {
+      .hero-content {
         position: relative;
         z-index: 2;
-        width: 100%;
         height: 100%;
-        padding: max(14px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)) 16px;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        padding: max(22px, env(safe-area-inset-top)) 18px 14px;
       }
 
       .logo {
-        width: 132px;
-        margin: 34px auto 0;
+        width: 138px;
+        margin-top: 42px;
       }
 
       .logo img {
-        width: 100%;
         display: block;
+        width: 100%;
+        height: auto;
       }
 
       .play-wrap {
         margin-top: auto;
-        display: flex;
-        justify-content: center;
       }
 
       .play-btn {
@@ -146,20 +145,15 @@
         background: var(--play-bg);
         color: #fff;
         min-height: 54px;
-        padding: 10px 20px;
-        font-size: 18px;
+        padding: 14px 24px;
+        font-size: 24px;
         font-weight: 600;
-        line-height: 1;
         display: inline-flex;
         align-items: center;
         gap: 12px;
+        box-shadow: var(--shadow);
         cursor: pointer;
-        backdrop-filter: blur(2px);
         animation: bounce 2.2s ease-in-out infinite;
-      }
-
-      .play-btn:active {
-        transform: scale(0.98);
       }
 
       .play-btn.is-hidden {
@@ -167,176 +161,203 @@
         pointer-events: none;
       }
 
-      .play-label {
-        font-size: 18px;
-        font-weight: 600;
+      .play-btn:active {
+        transform: scale(0.98);
       }
 
       .play-icon {
         width: 0;
         height: 0;
-        border-top: 11px solid transparent;
-        border-bottom: 11px solid transparent;
-        border-left: 18px solid #ffffff;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 16px solid #fff;
       }
 
       @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        35% {
-          transform: translateY(-4px);
-        }
-        60% {
-          transform: translateY(0);
-        }
-        78% {
-          transform: translateY(-2px);
-        }
+        0%, 100% { transform: translateY(0); }
+        35% { transform: translateY(-4px); }
+        60% { transform: translateY(0); }
+        78% { transform: translateY(-2px); }
       }
 
       .credits {
         margin-top: 14px;
         text-align: center;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 9px;
-        line-height: 1.35;
-        letter-spacing: 0.2px;
+        color: #ffffff;
+        font-size: 11px;
+        line-height: 1.3;
+        font-weight: 600;
+        text-wrap: balance;
       }
 
-      .stage-card {
-        margin-top: 14px;
-        background: var(--panel-bg);
+      .section {
+        position: relative;
+        margin: -6px 0 0;
+        padding: 0 16px max(26px, env(safe-area-inset-bottom));
+      }
+
+      .road {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .road svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .card {
+        position: relative;
+        z-index: 1;
         backdrop-filter: blur(3px);
         border-radius: 12px;
         padding: 16px;
+        margin-bottom: 14px;
+        overflow: hidden;
       }
 
-      .stage-title {
+      .card-title {
         margin: 0;
         color: #6c6e70;
         font-size: 16px;
-        line-height: 1.2;
+        line-height: 1.25;
+        font-weight: 700;
+      }
+
+      .card-desc {
+        margin: 4px 0 0;
+        color: #8898a5;
+        font-size: 12px;
+        line-height: 1.3;
         font-weight: 600;
       }
 
-      .stage-desc {
-        margin: 4px 0 12px;
-        color: #8898a5;
-        font-size: 12px;
-        line-height: 1.25;
-        font-weight: 600;
+      .card-intro {
+        border-radius: 12px 12px 0 0;
+        background: var(--panel-bg);
+        margin-bottom: 0;
+      }
+
+      .card-first {
+        border-radius: 0 0 12px 12px;
+        background: var(--panel-bg);
+      }
+
+      .select-time {
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border-radius: 14px;
+        background: #daba79;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+        min-height: 38px;
+        padding: 8px 12px;
+      }
+
+      .locked {
+        background: var(--panel-bg-muted);
+      }
+
+      .locked.coming {
+        background: var(--panel-bg-faint);
+      }
+
+      .locked-content {
+        filter: blur(4px);
       }
 
       .chips {
+        margin-top: 12px;
         display: flex;
+        align-items: center;
         gap: 4px;
         flex-wrap: wrap;
       }
 
       .chip {
-        color: #fff;
-        font-size: 12px;
-        font-weight: 600;
-        border-radius: 14px;
-        min-height: 23px;
-        line-height: 1;
-        padding: 6px 8px;
-        display: inline-flex;
-        align-items: center;
-      }
-
-      .chip-1 {
-        background: #d7c6a4;
-      }
-      .chip-2 {
-        background: #dee0df;
-      }
-      .chip-3 {
-        background: #b9beb0;
-      }
-      .chip-4 {
-        background: #755439;
-      }
-
-      .locked-row {
-        margin-top: 8px;
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 6px;
-      }
-
-      .locked-btn {
-        border: 0;
-        border-radius: 6px;
-        background: var(--badge-bg);
-        color: #7da3ac;
-        min-height: 30px;
-        padding: 6px 7px;
-        font-size: 12px;
-        font-weight: 600;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
-        white-space: nowrap;
+        border-radius: 14px;
+        color: #fff;
+        min-height: 23px;
+        padding: 6px 8px;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 600;
+      }
+
+      .c1 { background: #d7c6a4; }
+      .c2 { background: #dee0df; }
+      .c3 { background: #b9beb0; }
+      .c4 { background: #755439; }
+      .c5 { background: #c8c8c8; }
+      .c6 { background: #e2c5ac; }
+      .c7 { background: #7da3ac; }
+      .c8 { background: #cee6e9; }
+
+      .lock-overlay {
+        position: absolute;
+        left: 50%;
+        top: 26px;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #6b7679;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.15;
       }
 
       .lock-icon {
-        width: 16px;
-        height: 16px;
-        display: inline-flex;
+        width: 44px;
+        height: 54px;
       }
 
-      .lock-icon svg {
+      .lock-icon img {
         width: 100%;
         height: 100%;
+        display: block;
       }
 
-      .snackbar {
-        position: absolute;
-        left: 50%;
-        bottom: calc(max(24px, env(safe-area-inset-bottom)) + 6px);
-        transform: translate(-50%, 14px);
+      .footer-mark {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        margin-top: 6px;
+        opacity: 0.95;
+      }
+
+      .footer-mark img {
+        width: 100%;
+        display: block;
+      }
+
+      .reveal {
         opacity: 0;
-        background: var(--snackbar-bg);
-        color: var(--snackbar-fg);
-        font-size: 14px;
-        font-weight: 600;
-        padding: 12px 14px;
-        border-radius: 10px;
-        z-index: 4;
-        transition: opacity 180ms ease, transform 180ms ease;
-        pointer-events: none;
+        transform: translateY(24px) scale(0.985);
+        transition: opacity 550ms ease, transform 700ms cubic-bezier(0.2, 0.75, 0.2, 1);
       }
 
-      .snackbar.show {
+      .reveal.visible {
         opacity: 1;
-        transform: translate(-50%, 0);
-      }
-
-      @media (max-width: 420px) {
-        .play-btn {
-          min-height: 50px;
-          padding: 10px 18px;
-          gap: 10px;
-        }
-        .play-label {
-          font-size: 18px;
-        }
-        .play-icon {
-          border-top-width: 10px;
-          border-bottom-width: 10px;
-          border-left-width: 16px;
-        }
+        transform: translateY(0) scale(1);
       }
 
       @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
         .desktop-guard {
           display: flex;
         }
-        .mobile-app {
+        .app {
           display: none;
         }
       }
@@ -345,113 +366,164 @@
   <body>
     <section class="desktop-guard" aria-hidden="true">
       <div class="desktop-guard__box">
-        <h1>Откройте страницу на телефоне</h1>
-        <p>Этот экран доступен только в мобильном формате.</p>
+        <h1>Open this page on your phone</h1>
+        <p>This experience is designed for mobile view only.</p>
       </div>
     </section>
 
-    <main class="mobile-app" id="mobileApp">
-      <img class="bg-image" src="https://basilarcana-assets.b-cdn.net/qiwi/back.png" alt="Фон" />
-      <video
-        class="bg-video"
-        id="bgVideo"
-        src="https://basilarcana-assets.b-cdn.net/qiwi/video.mp4"
-        playsinline
-        muted
-        preload="auto"
-      ></video>
-      <audio
-        id="voiceAudio"
-        src="https://basilarcana-assets.b-cdn.net/qiwi/voice.mp3"
-        preload="auto"
-      ></audio>
-      <div class="overlay"></div>
+    <main class="app">
+      <section class="hero" id="hero">
+        <img class="hero-bg" src="https://basilarcana-assets.b-cdn.net/qiwi/back.png" alt="Background" />
+        <video
+          class="hero-video"
+          id="heroVideo"
+          src="https://basilarcana-assets.b-cdn.net/qiwi/video.mp4"
+          playsinline
+          muted
+          preload="auto"
+        ></video>
+        <audio
+          id="voiceAudio"
+          src="https://basilarcana-assets.b-cdn.net/qiwi/voice.mp3"
+          preload="auto"
+        ></audio>
 
-      <section class="content">
-        <div class="logo">
-          <img src="https://basilarcana-assets.b-cdn.net/qiwi/logo.svg" alt="Qiwi cartoon lab" />
-        </div>
-
-        <div class="play-wrap">
-          <button class="play-btn" id="playBtn" aria-label="Play video">
-            <span class="play-label">Play</span>
-            <span class="play-icon" aria-hidden="true"></span>
-          </button>
-        </div>
-
-        <div class="credits">BRUNO PIATTI . UME CHRONYN | JESSICA TANDY<br />
-          BEN KINGSLEY . KATHY BATES . BOB HOSKINS and BRENT MADDOCK . S.S. WILSON<br />
-          JAMES HORNER . STORY by BRENT MADDOCK . S.S. WILSON . MICK GARRIS<br />
-          RONALD L. SCHWARY . MATT WILLIAMS
-        </div>
-
-        <article class="stage-card">
-          <h2 class="stage-title">Первый этап</h2>
-          <p class="stage-desc">Сфотографируй 10 примеров которые станут эстетическим фундаментом мультфильма</p>
-          <div class="chips">
-            <span class="chip chip-1">Эмоций</span>
-            <span class="chip chip-2">Света</span>
-            <span class="chip chip-3">Образов</span>
-            <span class="chip chip-4">Тени</span>
+        <div class="hero-content">
+          <div class="logo">
+            <img src="https://www.figma.com/api/mcp/asset/ca5a33f0-4c5a-4da8-a1f5-b8b4f0ad8cf8" alt="Kiwi cartoon lab" />
           </div>
-        </article>
 
-        <div class="locked-row">
-          <button class="locked-btn" data-stage="2">
-            <span class="lock-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
-                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
-              </svg>
-            </span>
-            2 этап
-          </button>
-          <button class="locked-btn" data-stage="3">
-            <span class="lock-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
-                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
-              </svg>
-            </span>
-            3 этап
-          </button>
-          <button class="locked-btn" data-stage="4">
-            <span class="lock-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
-                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
-              </svg>
-            </span>
-            4 этап
-          </button>
-          <button class="locked-btn" data-stage="5">
-            <span class="lock-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17 9H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Z" stroke="#7DA3AC" stroke-width="1.8"/>
-                <path d="M8.5 9V6.5a3.5 3.5 0 1 1 7 0V9" stroke="#7DA3AC" stroke-width="1.8"/>
-              </svg>
-            </span>
-            5 этап
-          </button>
+          <div class="play-wrap">
+            <button class="play-btn" id="playBtn" aria-label="Play intro">
+              <span>Play</span>
+              <span class="play-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <div class="credits">
+            DIRECTOR | NATIA TSKHADAIA<br />
+            NATIA TSKHADAIA . MUSE . NATIA TSKHADAIA . INSPIRATION<br />
+            NATIA TSKHADAIA . BEAUTY . NATIA TSKHADAIA . FEELINGS<br />
+            STORY BY NATIA TSKHADAIA . LOVE BY NATIA TSKHADAIA<br />
+            REALIZED BY DEMID AZARENKO
+          </div>
         </div>
       </section>
 
-      <div class="snackbar" id="snackbar">этап пока заблокирован</div>
+      <section class="section">
+        <div class="road" aria-hidden="true">
+          <svg viewBox="0 0 430 980" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M225 0 C 228 130, 105 190, 150 315 C 190 428, 320 420, 280 540 C 250 628, 140 648, 170 760 C 200 860, 290 850, 282 980" stroke="rgba(255,255,255,0.72)" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M223 0 C 226 130, 103 190, 148 315 C 188 428, 318 420, 278 540 C 248 628, 138 648, 168 760 C 198 860, 288 850, 280 980" stroke="rgba(141,171,176,0.6)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+
+        <article class="card card-intro reveal">
+          <h2 class="card-title">KIWI CARTOON</h2>
+          <p class="card-desc">Create your own cartoon using the instructions below. I really hope it won’t be a drama ))</p>
+        </article>
+
+        <article class="card card-first reveal">
+          <h2 class="card-title">First stage</h2>
+          <p class="card-desc">Choose a place and time for the meeting and get the necessary equipment to create your story. All subsequent stages will open one after another.</p>
+          <a class="select-time" href="https://calendar.app.google/U7mHnwobRrHsW3Cr5" target="_blank" rel="noopener noreferrer">Select time</a>
+        </article>
+
+        <article class="card locked reveal">
+          <div class="locked-content">
+            <h2 class="card-title">Second Stage</h2>
+            <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation of the cartoon.</p>
+            <div class="chips">
+              <span class="chip c1">Emotions</span>
+              <span class="chip c2">Light</span>
+              <span class="chip c3">Images</span>
+              <span class="chip c4">Shadows</span>
+            </div>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+            <span>locked</span>
+          </div>
+        </article>
+
+        <article class="card locked reveal">
+          <div class="locked-content">
+            <h2 class="card-title">Third Stage</h2>
+            <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation of the cartoon.</p>
+            <div class="chips">
+              <span class="chip c1">Emotions</span>
+              <span class="chip c2">Light</span>
+              <span class="chip c5">Shadows</span>
+            </div>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+            <span>locked</span>
+          </div>
+        </article>
+
+        <article class="card locked reveal">
+          <div class="locked-content">
+            <h2 class="card-title">Fourth Stage</h2>
+            <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation.</p>
+            <div class="chips">
+              <span class="chip c1">Emotions</span>
+              <span class="chip c6">Shadows</span>
+            </div>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+            <span>locked</span>
+          </div>
+        </article>
+
+        <article class="card locked reveal">
+          <div class="locked-content">
+            <h2 class="card-title">Fifth Stage</h2>
+            <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation of the cartoon.</p>
+            <div class="chips">
+              <span class="chip c7">Shadows</span>
+              <span class="chip c1">Emotions</span>
+            </div>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+            <span>locked</span>
+          </div>
+        </article>
+
+        <article class="card locked coming reveal">
+          <div class="locked-content">
+            <h2 class="card-title">Sixth Stage</h2>
+            <p class="card-desc">Take 10 photos that will serve as the aesthetic foundation of the cartoon.</p>
+            <div class="chips">
+              <span class="chip c1">Emotions</span>
+              <span class="chip c8">Shadows</span>
+            </div>
+          </div>
+          <div class="lock-overlay">
+            <span class="lock-icon"><img src="https://www.figma.com/api/mcp/asset/8a9c62d6-5bcc-4bb4-85ca-aa60ea7e2a77" alt="" /></span>
+            <span>coming soon</span>
+          </div>
+        </article>
+
+        <div class="footer-mark reveal">
+          <img src="https://www.figma.com/api/mcp/asset/2f316df5-ab27-42d4-9988-453d118e24c5" alt="Kiwi cartoon lab footer mark" />
+        </div>
+      </section>
     </main>
 
     <script>
-      const mobileApp = document.getElementById("mobileApp");
-      const video = document.getElementById("bgVideo");
+      const hero = document.getElementById("hero");
+      const video = document.getElementById("heroVideo");
       const voiceAudio = document.getElementById("voiceAudio");
       const playBtn = document.getElementById("playBtn");
-      const snackbar = document.getElementById("snackbar");
-      const lockedButtons = document.querySelectorAll(".locked-btn");
+      const revealElements = document.querySelectorAll(".reveal");
 
       let isPlaying = false;
-      let snackbarTimer;
 
       const resetToImage = () => {
-        mobileApp.classList.remove("video-active");
+        hero.classList.remove("video-active");
         playBtn.classList.remove("is-hidden");
         isPlaying = false;
         voiceAudio.pause();
@@ -463,42 +535,51 @@
 
       const startPlayback = async () => {
         if (isPlaying) return;
+
         isPlaying = true;
         playBtn.classList.add("is-hidden");
-        mobileApp.classList.add("video-active");
+        hero.classList.add("video-active");
 
         try {
           voiceAudio.currentTime = 0;
           video.currentTime = 0;
           video.loop = true;
           await Promise.all([video.play(), voiceAudio.play()]);
-        } catch {
+        } catch (error) {
           resetToImage();
         }
       };
 
-      voiceAudio.addEventListener("ended", () => {
-        resetToImage();
-      });
-
       playBtn.addEventListener("click", startPlayback);
 
-      const showLockedSnackbar = () => {
-        snackbar.classList.add("show");
-        clearTimeout(snackbarTimer);
-        snackbarTimer = setTimeout(() => {
-          snackbar.classList.remove("show");
-        }, 1700);
-      };
-
-      lockedButtons.forEach((button) => {
-        button.addEventListener("click", showLockedSnackbar);
+      voiceAudio.addEventListener("ended", () => {
+        resetToImage();
       });
 
       document.addEventListener("visibilitychange", () => {
         if (document.hidden && isPlaying) {
           resetToImage();
         }
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.12,
+          rootMargin: "0px 0px -40px 0px",
+        }
+      );
+
+      revealElements.forEach((element, index) => {
+        element.style.transitionDelay = `${Math.min(index * 70, 280)}ms`;
+        observer.observe(element);
       });
     </script>
   </body>
