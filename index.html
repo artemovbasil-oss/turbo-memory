@@ -162,6 +162,11 @@
         transform: scale(0.98);
       }
 
+      .play-btn.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
       .play-label {
         font-size: 18px;
         font-weight: 600;
@@ -355,6 +360,11 @@
         muted
         preload="auto"
       ></video>
+      <audio
+        id="voiceAudio"
+        src="https://basilarcana-assets.b-cdn.net/qiwi/voice.mp3"
+        preload="auto"
+      ></audio>
       <div class="overlay"></div>
 
       <section class="content">
@@ -432,51 +442,46 @@
     <script>
       const mobileApp = document.getElementById("mobileApp");
       const video = document.getElementById("bgVideo");
+      const voiceAudio = document.getElementById("voiceAudio");
       const playBtn = document.getElementById("playBtn");
       const snackbar = document.getElementById("snackbar");
       const lockedButtons = document.querySelectorAll(".locked-btn");
 
       let isPlaying = false;
-      let loopsDone = 0;
       let snackbarTimer;
 
       const resetToImage = () => {
         mobileApp.classList.remove("video-active");
+        playBtn.classList.remove("is-hidden");
         isPlaying = false;
-        loopsDone = 0;
+        voiceAudio.pause();
+        voiceAudio.currentTime = 0;
         video.pause();
+        video.loop = false;
         video.currentTime = 0;
       };
 
-      const playVideoThreeTimes = async () => {
+      const startPlayback = async () => {
         if (isPlaying) return;
         isPlaying = true;
-        loopsDone = 0;
+        playBtn.classList.add("is-hidden");
         mobileApp.classList.add("video-active");
 
         try {
+          voiceAudio.currentTime = 0;
           video.currentTime = 0;
-          await video.play();
+          video.loop = true;
+          await Promise.all([video.play(), voiceAudio.play()]);
         } catch {
           resetToImage();
         }
       };
 
-      video.addEventListener("ended", async () => {
-        loopsDone += 1;
-        if (loopsDone < 3) {
-          video.currentTime = 0;
-          try {
-            await video.play();
-          } catch {
-            resetToImage();
-          }
-          return;
-        }
+      voiceAudio.addEventListener("ended", () => {
         resetToImage();
       });
 
-      playBtn.addEventListener("click", playVideoThreeTimes);
+      playBtn.addEventListener("click", startPlayback);
 
       const showLockedSnackbar = () => {
         snackbar.classList.add("show");
