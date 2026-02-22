@@ -183,9 +183,9 @@
 
       .credits {
         width: 100%;
-        max-width: 335px;
+        max-width: 368px;
         margin-top: 28px;
-        margin-bottom: 84px;
+        margin-bottom: 124px;
         text-align: center;
         color: #ffffff;
         font-size: 8px;
@@ -198,23 +198,6 @@
         position: relative;
         margin: -96px 0 0;
         padding: 0 16px max(26px, env(safe-area-inset-bottom));
-      }
-
-      .road {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .road img {
-        position: absolute;
-        top: 248px;
-        left: 50%;
-        width: 190.5px;
-        height: auto;
-        transform: translateX(-4px);
-        display: block;
       }
 
       .card {
@@ -252,6 +235,42 @@
       .card-first {
         border-radius: 0 0 12px 12px;
         background: var(--panel-bg);
+      }
+
+      .step-connector {
+        position: relative;
+        z-index: 1;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .step-connector::before {
+        content: "";
+        width: 2px;
+        height: 14px;
+        border-radius: 999px;
+        background: linear-gradient(to bottom, rgba(179, 203, 210, 0.55), rgba(108, 152, 162, 0.9));
+      }
+
+      .step-connector::after {
+        content: "";
+        position: absolute;
+        top: 11px;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 7px solid rgba(108, 152, 162, 0.95);
+      }
+
+      .step-connector.left {
+        transform: translateX(-26px);
+      }
+
+      .step-connector.right {
+        transform: translateX(26px);
       }
 
       .select-time {
@@ -439,10 +458,6 @@
       </section>
 
       <section class="section">
-        <div class="road" aria-hidden="true">
-          <img src="https://www.figma.com/api/mcp/asset/e134eac1-85be-43ad-919a-45a351d76ea0" alt="" />
-        </div>
-
         <article class="card card-intro reveal">
           <h2 class="card-title">KIWI CARTOON</h2>
           <p class="card-desc">Create your own cartoon using the instructions below. I really hope it won’t be a drama ))</p>
@@ -453,6 +468,7 @@
           <p class="card-desc">Choose a place and time for the meeting and get the necessary equipment to create your story. All subsequent stages will open one after another.</p>
           <a class="select-time" href="https://calendar.app.google/U7mHnwobRrHsW3Cr5" target="_blank" rel="noopener noreferrer">Select time</a>
         </article>
+        <div class="step-connector reveal left" aria-hidden="true"></div>
 
         <article class="card locked reveal">
           <div class="locked-content">
@@ -470,6 +486,7 @@
             <span>locked</span>
           </div>
         </article>
+        <div class="step-connector reveal right" aria-hidden="true"></div>
 
         <article class="card locked reveal">
           <div class="locked-content">
@@ -486,6 +503,7 @@
             <span>locked</span>
           </div>
         </article>
+        <div class="step-connector reveal left" aria-hidden="true"></div>
 
         <article class="card locked reveal">
           <div class="locked-content">
@@ -501,6 +519,7 @@
             <span>locked</span>
           </div>
         </article>
+        <div class="step-connector reveal right" aria-hidden="true"></div>
 
         <article class="card locked reveal">
           <div class="locked-content">
@@ -516,6 +535,7 @@
             <span>locked</span>
           </div>
         </article>
+        <div class="step-connector reveal left" aria-hidden="true"></div>
 
         <article class="card locked coming reveal">
           <div class="locked-content">
